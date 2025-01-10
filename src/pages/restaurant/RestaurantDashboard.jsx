@@ -13,10 +13,10 @@ export default function RestaurantDashboard() {
   const [menu, setMenu] = useState([]);
 
   useEffect(() => {
-    if (!user || user.role !== 'restaurant') {
-      navigate('/');
-      return;
-    }
+    // if (!user || user.role !== 'restaurant') {
+    //   navigate('/');
+    //   return;
+    // }
 
     // TODO: Fetch real data from API
     fetchDashboardData();

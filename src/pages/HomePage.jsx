@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SearchFilters from '../components/SearchFilters';
 import RestaurantCard from '../components/RestaurantCard';
 import { mockRestaurants } from '../utils/mockData';
+import { retrieveAllRestaurants } from '../api/RestaurantApi';
 
 export default function HomePage() {
   const [search, setSearch] = useState('');
@@ -10,8 +11,22 @@ export default function HomePage() {
     openNow: false,
     freeDelivery: false
   });
+  const [restaurants, setRestaurants] = useState([])
 
-  const filteredRestaurants = mockRestaurants.filter(restaurant => {
+  useEffect(() => {
+    async function retrieveRestaurants() {
+      try {
+        const response = await retrieveAllRestaurants();
+        setRestaurants(response.data)
+        console.log(restaurants)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    retrieveRestaurants()
+  }, [])
+
+  const filteredRestaurants = restaurants.filter(restaurant => {
     if (filters.openNow && !restaurant.isOpen) return false;
     if (filters.freeDelivery && restaurant.deliveryFee > 0) return false;
 
@@ -27,18 +42,18 @@ export default function HomePage() {
       <div className='flex items-center gap-2 pt-2 pb-2'>
         <div>
 
-        <h1 className="text-4xl font-bold text-gray-900 mb-8">
-          Hungry? Order food to your door
-        </h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-8">
+            Hungry? Order food to your door
+          </h1>
 
-        <SearchFilters
-          search={search}
-          setSearch={setSearch}
-          location={location}
-          setLocation={setLocation}
-          filters={filters}
-          setFilters={setFilters}
-        />
+          <SearchFilters
+            search={search}
+            setSearch={setSearch}
+            location={location}
+            setLocation={setLocation}
+            filters={filters}
+            setFilters={setFilters}
+          />
         </div>
         <img className='w-1/2 h-72 rounded-lg' src="../../homepage.png" alt="homepage" />
       </div>
