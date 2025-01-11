@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import MenuList from '../../components/restaurant/MenuList';
 import RestaurantHeader from '../../components/restaurant/RestaurantHeader';
-import { mockRestaurants } from '../../utils/mockData';
 import { retrieveARestaurant } from '../../api/RestaurantApi';
 import { retieveAllMenus } from '../../api/MenusApi';
 
@@ -12,7 +11,6 @@ export default function RestaurantPage() {
   const [menu, setMenu] = useState([]);
 
   useEffect(() => {
-    // TODO: Replace with API call
     const fetchRestaurant = async () => {
       const response = await retrieveARestaurant(id)
       const foundRestaurant = response.data
@@ -23,7 +21,6 @@ export default function RestaurantPage() {
   }, [id]);
 
   useEffect(() => {
-    // TODO: Replace with API call
     const fetchMenus = async () => {
       const response = await retieveAllMenus(id)
       const foundMenus = response.data
@@ -33,19 +30,22 @@ export default function RestaurantPage() {
     fetchMenus();
   }, [id]);
 
-  if (!restaurant) {
+  if (!restaurant ){
     return <div>Loading...</div>;
   }
 
+  console.log(restaurant)
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {restaurant.deliveryFee ? (
+    <div className="max-w-7xl mx-auto px-4 pt-20 pb-12">
+      {/* {restaurant !== undefined ? ( */}
         <RestaurantHeader restaurant={restaurant} />
-      ): (
-      <p>Loading...</p>
-      )
-      }
+      {/* ) : ( */}
+        {/* <p>Loading...</p> */}
+      {/* ) */}
+      {/* } */}
+      {menu.length ==0 ? <p>This restaurant propose no menu in moment </p> :
       <MenuList menu={menu} restaurantId={id} />
+      }
     </div>
   );
 }

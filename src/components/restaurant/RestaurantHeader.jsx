@@ -2,13 +2,13 @@ import React from 'react';
 import { Star, Clock, Bike } from 'lucide-react';
 
 export default function RestaurantHeader({ restaurant }) {
-  console.log(restaurant)
+  console.log("From the header",restaurant.image)
   return (
     <div className="flex flex-col">
       <div className="h-64 w-full overflow-hidden">
         <img
-          src={restaurant.image}
-          alt={restaurant.name}
+          src={restaurant?.image}
+          alt={restaurant?.name}
           className="w-full h-full object-cover"
         />
       </div>
@@ -17,7 +17,7 @@ export default function RestaurantHeader({ restaurant }) {
         <div className="sm:flex-1 sm:min-w-0 sm:flex sm:items-center sm:justify-end sm:space-x-6 sm:pb-1">
           <div className="sm:hidden md:block mt-6 min-w-0 flex-1">
             <h1 className="text-2xl font-bold text-gray-900 truncate">
-              {restaurant.name}
+              {restaurant?.name}
             </h1>
           </div>
         </div>
@@ -26,7 +26,7 @@ export default function RestaurantHeader({ restaurant }) {
           <div className="flex items-center space-x-4 text-sm text-gray-600">
             <div className="flex items-center">
               <Star className="h-4 w-4 text-yellow-400 mr-1" />
-              <span>{restaurant.rating}</span>
+              <span>{restaurant?.rating}</span>
             </div>
 
             <div className="flex items-center">
@@ -37,7 +37,9 @@ export default function RestaurantHeader({ restaurant }) {
             <div className="flex items-center">
               <Bike className="h-4 w-4 text-gray-400 mr-1" />
               <span>
-                {restaurant.deliveryFee === 0 ? 'Free Delivery' : `€${restaurant.deliveryFee.toFixed(2)}`}
+                { restaurant.restaurant !== undefined ? 
+                (restaurant?.deliveryFee === 0 ? 'Free Delivery' : `€${restaurant?.deliveryFee.toFixed(2)}`) : ('loading')
+                } 
               </span>
             </div>
           </div>
