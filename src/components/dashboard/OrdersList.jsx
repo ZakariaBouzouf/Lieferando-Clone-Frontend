@@ -1,7 +1,7 @@
 import React from 'react';
 import { formatDistanceToNow } from 'date-fns';
 
-export default function OrdersList({ orders }) {
+export default function OrdersList({ orders, onUpdateStatus }) {
   const getStatusColor = (status) => {
     switch (status) {
       case 'pending': return 'bg-yellow-100 text-yellow-800';
@@ -11,6 +11,8 @@ export default function OrdersList({ orders }) {
       default: return 'bg-gray-100 text-gray-800';
     }
   };
+
+  const statuses = ['pending', 'preparing', 'ready', 'delivered'];
 
   return (
     <div className="bg-white shadow overflow-hidden sm:rounded-md">
@@ -48,14 +50,22 @@ export default function OrdersList({ orders }) {
                 </div>
               </div>
               
-              <div className="mt-2 flex justify-between">
+              <div className="mt-2 flex justify-between items-center">
                 <p className="text-sm font-medium text-gray-900">
                   Total: ${order.total.toFixed(2)}
                 </p>
-                <div className="space-x-2">
-                  <button className="px-3 py-1 text-sm text-white bg-orange-600 rounded-md hover:bg-orange-700">
-                    Update Status
-                  </button>
+                <div className="flex items-center space-x-2">
+                  <select
+                    value={order.status}
+                    onChange={(e) => onUpdateStatus(order.id, e.target.value)}
+                    className="block w-32 pl-3 pr-10 py-1 text-sm border-gray-300 focus:outline-none focus:ring-orange-500 focus:border-orange-500 rounded-md"
+                  >
+                    {statuses.map(status => (
+                      <option key={status} value={status}>
+                        {status.charAt(0).toUpperCase() + status.slice(1)}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
             </div>

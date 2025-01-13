@@ -5,8 +5,12 @@ export default function MenuItemForm({ item, onSave, onCancel }) {
     name: '',
     price: '',
     category: '',
+    description: '',
+    image: '',
     available: true
   });
+
+  const [imagePreview, setImagePreview] = useState(item?.image || '');
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -24,6 +28,21 @@ export default function MenuItemForm({ item, onSave, onCancel }) {
     }));
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+        setFormData(prev => ({
+          ...prev,
+          image: reader.result
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow mb-6">
       <div className="grid grid-cols-1 gap-4">
@@ -35,6 +54,17 @@ export default function MenuItemForm({ item, onSave, onCancel }) {
             value={formData.name}
             onChange={handleChange}
             required
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Description</label>
+          <textarea
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            rows={3}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500"
           />
         </div>
@@ -63,6 +93,36 @@ export default function MenuItemForm({ item, onSave, onCancel }) {
             required
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500"
           />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Image</label>
+          <div className="mt-1 flex items-center space-x-4">
+            <input
+              type="text"
+              name="image"
+              value={formData.image}
+              onChange={handleChange}
+              placeholder="Image URL"
+              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500"
+            />
+            <span className="text-sm text-gray-500">or</span>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100"
+            />
+          </div>
+          {imagePreview && (
+            <div className="mt-2">
+              <img
+                src={imagePreview}
+                alt="Preview"
+                className="h-32 w-32 object-cover rounded-md"
+              />
+            </div>
+          )}
         </div>
 
         <div className="flex items-center">

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Plus, Edit2, Trash2 } from 'lucide-react';
+import MenuItemForm from './MenuItemForm';
 
 export default function MenuManager({ menu, setMenu }) {
   const [editingItem, setEditingItem] = useState(null);
@@ -16,7 +17,9 @@ export default function MenuManager({ menu, setMenu }) {
   };
 
   const handleDelete = (id) => {
-    setMenu(menu.filter(item => item.id !== id));
+    if (window.confirm('Are you sure you want to delete this item?')) {
+      setMenu(menu.filter(item => item.id !== id));
+    }
   };
 
   return (
