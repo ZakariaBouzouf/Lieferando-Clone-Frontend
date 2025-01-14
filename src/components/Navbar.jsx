@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 
 export default function Navbar() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const { items } = useCart();
 
   return (
@@ -27,12 +27,17 @@ export default function Navbar() {
                 </span>
               )}
             </Link>
-            
+
             {user ? (
-              <Link to="/profile" className="flex items-center space-x-2">
-                <User className="h-6 w-6 text-gray-600" />
-                <span className="text-gray-800">{user.name}</span>
-              </Link>
+              <div className="flex items-center space-x-2">
+                <Link to="/profile" className="flex items-center space-x-2">
+                  <User className="h-6 w-6 text-gray-600" />
+                  <span className="text-gray-800">{user.name}</span>
+                </Link>
+                <Link >
+                  <span className="text-gray-800" onClick={logout} >Logout</span>
+                </Link>
+              </div>
             ) : (
               <Link to="/login" className="flex items-center space-x-2">
                 <LogIn className="h-6 w-6 text-gray-600" />

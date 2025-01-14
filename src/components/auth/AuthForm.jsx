@@ -7,6 +7,7 @@ export default function AuthForm({ type, onSubmit, error }) {
     email: '',
     password: '',
     name: '',
+    address:'',
     role: USER_ROLES.CUSTOMER
   });
 
@@ -79,6 +80,21 @@ export default function AuthForm({ type, onSubmit, error }) {
           />
         </div>
 
+        {type === 'register' && (
+          <div>
+            <label htmlFor="address" className="sr-only">Address</label>
+            <input
+              id="address"
+              name="address"
+              type="text"
+              required
+              className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-orange-500 focus:border-orange-500 focus:z-10 sm:text-sm"
+              placeholder="Address"
+              value={formData.address}
+              onChange={handleChange}
+            />
+          </div>
+        )}
         <div>
           <label className="block text-sm font-medium text-gray-700">Account type</label>
           <select

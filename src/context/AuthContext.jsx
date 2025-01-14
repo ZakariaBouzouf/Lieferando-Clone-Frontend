@@ -1,7 +1,11 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { USER_ROLES } from '../utils/constants';
+import { loginApi, sessionApi, signUpApi } from '../api/AuthApi';
+import { NavLink, useNavigate } from 'react-router-dom';
+import _default from 'eslint-plugin-react-refresh';
 
 const AuthContext = createContext(undefined);
+
 
 export function useAuth() {
   const context = useContext(AuthContext);
@@ -13,19 +17,76 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [error, setError] = useState(null)
+  const [cookies, setCookies] = useState('')
+  const [loading,setLoading] =useState(true)
 
-  const login = (userData) => {
-    setUser(userData);
-    // In real app, store token in localStorage
+  const navigate = useNavigate()
+
+  useEffect(() => {
+      const checkSession = async () => {
+        try {
+          const response = await sessionApi()
+          setUser({
+            userId: response.data.userId,
+            email: response.data.email,
+            role: response.data.role,
+          });
+        } catch (error) {
+          console.error("No active session:", error.response?.data?.message);
+          setUser(null);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      checkSession();
+      console.log("Log in2",user?.role)
+    }, []);
+
+  async function login({ email, password }) {
+
+    try {
+      const response = await loginApi(email, password)
+      console.log(response)
+      if (response.status == 200) {
+        setUser({ userId: response.data.userId, role: response.data.role })
+        console.log("Log in",user)
+        navigate("/")
+      }
+    } catch (err) {
+      setError(err.response.data.message)
+    }
+    //store token in localStorage
   };
 
-  const logout = () => {
+  async function register({ email, password, name, role, address }) {
+    try {
+      const response = await signUpApi(email, password, name, role, address)
+      if (response.status == 200) {
+        console.log("Done", response)
+        navigate("/login")
+      }
+    } catch (err) {
+      setError(err.response.data.message)
+    }
+  }
+
+  async function logout () {
     setUser(null);
-    // In real app, remove token from localStorage
+    try{
+      const response = await logout()
+      if(response.status ==200){
+        navigate("/")
+      }
+    }catch(err){
+      console.log(err)
+    // setError(err.response.data.message)
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, register, error }}>
       {children}
     </AuthContext.Provider>
   );

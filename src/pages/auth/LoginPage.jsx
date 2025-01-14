@@ -1,34 +1,16 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import AuthForm from '../../components/auth/AuthForm';
 
 export default function LoginPage() {
-  const navigate = useNavigate();
-  const { login } = useAuth();
-  const [error, setError] = useState('');
+  const { login,error } = useAuth();
 
   const handleLogin = async (data) => {
     try {
-      // TODO: Connect to backend API
-      const response = await mockLoginApi(data);
-      login(response.user);
-      navigate('/');
+      login(data);
     } catch (err) {
-      setError('Invalid credentials');
+      console.log('error')
     }
-  };
-
-  // Mock API call - replace with real API
-  const mockLoginApi = async (data) => {
-    return {
-      user: {
-        id: '1',
-        name: 'John Doe',
-        email: data.email,
-        role: data.role
-      }
-    };
   };
 
   return (
