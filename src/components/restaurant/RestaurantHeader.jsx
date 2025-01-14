@@ -2,7 +2,6 @@ import React from 'react';
 import { Star, Clock, Bike } from 'lucide-react';
 
 export default function RestaurantHeader({ restaurant }) {
-  console.log("From the header",restaurant.image)
   return (
     <div className="flex flex-col">
       <div className="h-64 w-full overflow-hidden">

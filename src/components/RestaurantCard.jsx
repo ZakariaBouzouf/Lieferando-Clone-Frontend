@@ -1,10 +1,13 @@
 import React from 'react';
 import { Star, Clock, Bike } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useRestaurant } from '../context/RestaurantContext';
 
 export default function RestaurantCard({ restaurant }) {
+  const {prefetchMenu}= useRestaurant()
+
   return (
-    <Link to={`/restaurant/${restaurant.id}`}>
+    <Link to={`/restaurant/${restaurant.id}`} onMouseEnter={()=>prefetchMenu(restaurant.id)}>
       <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
         <div className="relative h-48">
           <img

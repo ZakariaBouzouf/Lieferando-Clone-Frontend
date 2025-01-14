@@ -14,11 +14,13 @@ export default function RestaurantDashboard() {
   const [orders, setOrders] = useState([]);
   const [menu, setMenu] = useState([]);
   const [restaurant, setRestaurant] = useState(null);
+
   useEffect(() => {
-    // if (!user || user.role !== 'restaurant') {
-    //   navigate('/');
-    //   return;
-    // }
+    console.log(user)
+    if (!user || user.role !== 'restaurant') {
+      navigate('/');
+      return;
+    }
 
     // TODO: Fetch real data from API
     fetchDashboardData();

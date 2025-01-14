@@ -3,49 +3,52 @@ import { useParams } from 'react-router-dom';
 import MenuList from '../../components/restaurant/MenuList';
 import RestaurantHeader from '../../components/restaurant/RestaurantHeader';
 import { retrieveARestaurant } from '../../api/RestaurantApi';
-import { retieveAllMenus } from '../../api/MenusApi';
+import { useRestaurant } from '../../context/RestaurantContext';
 
 export default function RestaurantPage() {
   const { id } = useParams();
-  const [restaurant, setRestaurant] = useState(null);
-  const [menu, setMenu] = useState([]);
+  const [menu, setMenu] = useState(null);
+  const { restaurants, menus, retrieveMenu, menu: fetchedMenu } = useRestaurant()
+  const restaurant = restaurants[id - 1]
 
+  // useEffect(() => {
+  //   const fetchMenus = async () => {
+  //     const response = await retieveAllMenus(id)
+  //     const foundMenus = response.data
+  //
+  //     setMenu(foundMenus);
+  //   };
+  //   fetchMenus();
+  //   console.log("Menus",menu)
+  // }, [id]);
+  console.log("menus", menus)
   useEffect(() => {
-    const fetchRestaurant = async () => {
-      const response = await retrieveARestaurant(id)
-      const foundRestaurant = response.data
+    if (menus.length !== 0) {
+      const foundedMenu = menus.filter(item => item.restaurantId === Number(id))
+      if (foundedMenu.length === 0) {
+        retrieveMenu(id)
+        setMenu(fetchedMenu[0])
+      } else {
+        setMenu(foundedMenu[0].items)
+      }
+    }
+  }, [menus, id])
 
-      setRestaurant(foundRestaurant);
-    };
-    fetchRestaurant();
-  }, [id]);
-
-  useEffect(() => {
-    const fetchMenus = async () => {
-      const response = await retieveAllMenus(id)
-      const foundMenus = response.data
-
-      setMenu(foundMenus);
-    };
-    fetchMenus();
-  }, [id]);
-
-  if (!restaurant ){
+  if (!restaurant) {
+    return <div>Loading...</div>;
+  }
+  if (!menu) {
     return <div>Loading...</div>;
   }
 
-  console.log(restaurant)
+  console.log("menu", menu)
+  console.log("fetchedMenu", fetchedMenu)
   return (
     <div className="max-w-7xl mx-auto px-4 pt-20 pb-12">
-      {/* {restaurant !== undefined ? ( */}
-        <RestaurantHeader restaurant={restaurant} />
-      {/* ) : ( */}
-        {/* <p>Loading...</p> */}
-      {/* ) */}
-      {/* } */}
-      {menu.length ==0 ? <p>This restaurant propose no menu in moment </p> :
+      <RestaurantHeader restaurant={restaurant} />
+      {/* {menu?.items?.length == 0 ? <p>This restaurant propose no menu in moment </p> : */}
       <MenuList menu={menu} restaurantId={id} />
-      }
+      {/* } */}
     </div>
   );
 }

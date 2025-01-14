@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import SearchFilters from '../components/SearchFilters';
 import RestaurantCard from '../components/RestaurantCard';
-import { mockRestaurants } from '../utils/mockData';
 import { retrieveAllRestaurants } from '../api/RestaurantApi';
+import { useRestaurant } from '../context/RestaurantContext';
+import { prefetchMenuApi } from '../api/MenusApi';
 
 export default function HomePage() {
   const [search, setSearch] = useState('');
@@ -11,20 +12,21 @@ export default function HomePage() {
     openNow: false,
     freeDelivery: false
   });
-  const [restaurants, setRestaurants] = useState([])
+  // const [restaurants, setRestaurants] = useState([])
+  const {restaurants,prefetchMenu} = useRestaurant()
 
-  useEffect(() => {
-    async function retrieveRestaurants() {
-      try {
-        const response = await retrieveAllRestaurants();
-        setRestaurants(response.data)
-        console.log(restaurants)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-    retrieveRestaurants()
-  }, [])
+  // useEffect(() => {
+  //   async function retrieveRestaurants() {
+  //     try {
+  //       const response = await retrieveAllRestaurants();
+  //       setRestaurants(response.data)
+  //       console.log(restaurants)
+  //     } catch (error) {
+  //       console.log(error)
+  //     }
+  //   }
+  //   retrieveRestaurants()
+  // }, [])
 
   const filteredRestaurants = restaurants.filter(restaurant => {
     if (filters.openNow && !restaurant.isOpen) return false;
@@ -60,7 +62,7 @@ export default function HomePage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredRestaurants.map(restaurant => (
-          <RestaurantCard key={restaurant.id} restaurant={restaurant} />
+          <RestaurantCard  key={restaurant.id} restaurant={restaurant} />
         ))}
       </div>
     </div>
