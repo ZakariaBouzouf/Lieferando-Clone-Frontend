@@ -13,6 +13,7 @@ export default function AuthForm({ type, onSubmit, error }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(formData)
     onSubmit(formData);
   };
 
@@ -95,7 +96,7 @@ export default function AuthForm({ type, onSubmit, error }) {
             />
           </div>
         )}
-        <div>
+        {type ==='register'&& <div>
           <label className="block text-sm font-medium text-gray-700">Account type</label>
           <select
             name="role"
@@ -106,7 +107,7 @@ export default function AuthForm({ type, onSubmit, error }) {
             <option value={USER_ROLES.CUSTOMER}>Customer</option>
             <option value={USER_ROLES.RESTAURANT}>Restaurant Owner</option>
           </select>
-        </div>
+        </div> }
 
         <div>
           <button
