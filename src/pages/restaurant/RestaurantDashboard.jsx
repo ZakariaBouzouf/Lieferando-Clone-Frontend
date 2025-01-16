@@ -6,54 +6,66 @@ import OrdersList from '../../components/dashboard/OrdersList';
 import MenuManager from '../../components/dashboard/MenuManager';
 import RestaurantProfile from '../../components/dashboard/RestaurantProfile';
 import { mockRestaurants } from '../../utils/mockData';
+import { retrieveRestaurantOrder } from '../../api/OrdersApi';
+import { useRestaurant } from '../../context/RestaurantContext';
 
 export default function RestaurantDashboard() {
-  const { user } = useAuth();
+  const { user,orders:fetchedOrders,fetchOrdersRestaurant } = useAuth();
+  const {menus,restaurants,retrieveMenus} = useRestaurant()
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('profile');
   const [orders, setOrders] = useState([]);
-  const [menu, setMenu] = useState([]);
+  // const [menu, setMenu] = useState([]);
   const [restaurant, setRestaurant] = useState(null);
 
   useEffect(() => {
     console.log(user)
-    if (!user || user.role !== 'restaurant') {
-      navigate('/');
-      return;
-    }
+    // if (!user || user.role !== 'restaurant') {
+    //   navigate('/');
+    //   return;
+    // }
 
     // TODO: Fetch real data from API
     fetchDashboardData();
+    if(user != undefined){
+      retrieveMenus(user?.userId)
+    }
+    console.log("fetched menus ",menus)
+    // setMenu(menus);
   }, [user, navigate]);
 
   const fetchDashboardData = async () => {
+    fetchOrdersRestaurant(user?.userId)
+    // const response = await retrieveRestaurantOrder(user.userId)
     // Mock data - replace with API calls
-    const mockOrders = [
-      {
-        id: '1',
-        customer: 'John Doe',
-        items: [{ name: 'Pizza', quantity: 2, price: 12.99 }],
-        total: 25.98,
-        status: 'pending',
-        createdAt: new Date().toISOString()
-      }
-    ];
-
-    const mockMenu = [
-      {
-        id: '1',
-        name: 'Margherita Pizza',
-        price: 12.99,
-        category: 'Pizza',
-        available: true
-      }
-    ];
+    // const mockOrders = [
+    //   {
+    //     id: '1',
+    //     customer: 'John Doe',
+    //     items: [{ name: 'Pizza', quantity: 2, price: 12.99 }],
+    //     total: 25.98,
+    //     status: 'pending',
+    //     createdAt: new Date().toISOString()
+    //   }
+    // ];
+    //
+    // const mockMenu = [
+    //   {
+    //     id: '1',
+    //     name: 'Margherita Pizza',
+    //     price: 12.99,
+    //     category: 'Pizza',
+    //     available: true
+    //   }
+    // ];
     // Get restaurant data from mock data (in real app, fetch from API)
-    const restaurantData = mockRestaurants[0]; // Using first restaurant as example
+    // const restaurantData = mockRestaurants[0]; // Using first restaurant as example
+    // console.log("fetched order ",fetchedOrders)
 
-    setOrders(mockOrders);
-    setMenu(mockMenu);
-    setRestaurant(restaurantData)
+    setOrders(fetchedOrders);
+    //TODO : fix the right restaurant 
+    // restaurant = restaurants.filter(restau=>restau.id == user?.userId)
+    setRestaurant(restaurants[0])
   };
 
   const handleUpdateOrderStatus = (orderId, newStatus) => {
@@ -126,8 +138,8 @@ export default function RestaurantDashboard() {
             />
           ) : (
             <MenuManager
-              menu={menu}
-              setMenu={setMenu}
+              menu={menus}
+              // setMenu={setMenu}
             />
           )}
         </div>

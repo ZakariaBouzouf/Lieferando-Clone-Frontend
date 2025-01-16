@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { USER_ROLES } from '../utils/constants';
-import { loginApi, sessionApi, signUpApi } from '../api/AuthApi';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { loginApi, logoutApi, sessionApi, signUpApi } from '../api/AuthApi';
+import {  useNavigate } from 'react-router-dom';
 import _default from 'eslint-plugin-react-refresh';
+import { retrieveCustomerOrder, retrieveRestaurantOrder } from '../api/OrdersApi';
 
 const AuthContext = createContext(undefined);
 
@@ -18,31 +18,44 @@ export function useAuth() {
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null)
-  const [cookies, setCookies] = useState('')
-  const [loading,setLoading] =useState(true)
+  const [orders, setOrders] = useState([])
+  const [loading, setLoading] = useState(true)
 
   const navigate = useNavigate()
 
   useEffect(() => {
-      const checkSession = async () => {
-        try {
-          const response = await sessionApi()
-          setUser({
-            userId: response.data.userId,
-            email: response.data.email,
-            role: response.data.role,
-          });
-        } catch (error) {
-          console.error("No active session:", error.response?.data?.message);
-          setUser(null);
-        } finally {
-          setLoading(false);
-        }
-      };
+    const checkSession = async () => {
+      try {
+        const response = await sessionApi()
+        setUser({
+          userId: response.data.userId,
+          email: response.data.email,
+          name: response.data.name,
+          role: response.data.role,
+        });
+        // if (response.status ===200 ){
+        //   fetchOrders(response.data.userId)
+        // }
+      } catch (error) {
+        console.error("No active session:", error.response?.data?.message);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      checkSession();
-      console.log("Log in2",user?.role)
-    }, []);
+    checkSession();
+  }, []);
+
+  useEffect(()=>{
+    if(user != undefined){
+      if(user.status ==="restaurant"){
+        fetchOrdersRestaurant(user?.userId)
+      }else{
+        fetchOrdersCustomer(user?.userId)
+      }
+    }
+  },[user])
 
   async function login({ email, password }) {
 
@@ -51,14 +64,39 @@ export function AuthProvider({ children }) {
       console.log(response)
       if (response.status == 200) {
         setUser({ userId: response.data.userId, role: response.data.role })
-        console.log("Log in",user)
+        console.log("Log in", user)
         navigate("/")
       }
     } catch (err) {
       setError(err.response.data.message)
     }
+    // fetchOrders(user?.userId)
     //store token in localStorage
   };
+
+  async function fetchOrdersCustomer(id) {
+    try {
+      const response = await retrieveCustomerOrder(id)
+      if (response.status === 200) {
+        console.log("fetch orders",response)
+        setOrders(response.data)
+      }
+    } catch (err) {
+      setError(err.response)
+    }
+  }
+
+  async function fetchOrdersRestaurant(id) {
+    try {
+      const response = await retrieveRestaurantOrder(id)
+      if (response.status === 200) {
+        console.log("fetch orders api",response)
+        setOrders(response.data)
+      }
+    } catch (err) {
+      setError(err.response)
+    }
+  }
 
   async function register({ email, password, name, role, address }) {
     try {
@@ -72,21 +110,21 @@ export function AuthProvider({ children }) {
     }
   }
 
-  async function logout () {
+  async function logout() {
     setUser(null);
-    try{
-      const response = await logout()
-      if(response.status ==200){
+    try {
+      const response = await logoutApi()
+      if (response.status === 200) {
         navigate("/")
       }
-    }catch(err){
+    } catch (err) {
       console.log(err)
-    // setError(err.response.data.message)
+      // setError(err.response.data.message)
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, register, error }}>
+    <AuthContext.Provider value={{ user, login, logout, register, error, fetchOrdersCustomer,fetchOrdersRestaurant,orders }}>
       {children}
     </AuthContext.Provider>
   );

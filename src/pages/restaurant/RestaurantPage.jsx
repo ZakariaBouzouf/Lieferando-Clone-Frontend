@@ -21,7 +21,7 @@ export default function RestaurantPage() {
   //   fetchMenus();
   //   console.log("Menus",menu)
   // }, [id]);
-  console.log("menus", menus)
+  // console.log("menus", menus)
   useEffect(() => {
     if (menus.length !== 0) {
       const foundedMenu = menus.filter(item => item.restaurantId === Number(id))

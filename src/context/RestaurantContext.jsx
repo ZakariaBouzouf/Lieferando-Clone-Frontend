@@ -30,11 +30,11 @@ export function RestaurantProvider({ children }) {
     retrieveRestaurants()
   }, [])
 
-  async function retrieveMenu(id){
+  async function retrieveMenus(id){
     try {
       const response = await retrieveAllMenus(id)
       console.log(response)
-      setMenu(response.data)
+      setMenus(response.data)
     } catch (error) {
       console.log(error)
     }
@@ -56,7 +56,7 @@ export function RestaurantProvider({ children }) {
     <RestaurantContext.Provider value={{
       restaurants,
       prefetchMenu,
-      retrieveMenu,
+      retrieveMenus,
       menu,
       menus
     }}>
