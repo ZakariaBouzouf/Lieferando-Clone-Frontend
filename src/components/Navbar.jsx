@@ -30,10 +30,20 @@ export default function Navbar() {
 
             {user ? (
               <div className="flex items-center space-x-2">
-                <Link to="/profile" className="flex items-center space-x-2">
-                  <User className="h-6 w-6 text-gray-600" />
-                  <span className="text-gray-800">{user.name}</span>
-                </Link>
+                {user.role === "customer" ?
+                  (
+                    <Link to="/profile" className="flex items-center space-x-2">
+                      <User className="h-6 w-6 text-gray-600" />
+                      <span className="text-gray-800">{user.name}</span>
+                    </Link>
+                  ) :
+                  (
+                    <Link to="/dashboard" className="flex items-center space-x-2">
+                      <User className="h-6 w-6 text-gray-600" />
+                      <span className="text-gray-800">{user.name}</span>
+                    </Link>
+                  )
+                }
                 <Link >
                   <span className="text-gray-800" onClick={logout} >Logout</span>
                 </Link>

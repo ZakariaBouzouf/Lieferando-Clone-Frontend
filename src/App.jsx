@@ -10,6 +10,7 @@ import RestaurantPage from './pages/restaurant/RestaurantPage';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import RestaurantDashboard from './pages/restaurant/RestaurantDashboard';
+import ProfilePage from './pages/customer/ProfilePage';
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
                 <Route path="/cart" element={<CartPage />} />
                 <Route path="/checkout" element={<CheckoutPage />} />
                 <Route path="/dashboard" element={<RestaurantDashboard />} />
+                <Route path="/profile" element={<ProfilePage />} />
               </Routes>
             </div>
           </CartProvider>
