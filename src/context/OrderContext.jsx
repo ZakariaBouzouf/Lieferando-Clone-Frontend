@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { retrieveCustomerOrder, retrieveRestaurantOrder } from "../api/OrdersApi";
+import { retrieveCustomerOrder, retrieveRestaurantOrder, updateAnOrderApi } from "../api/OrdersApi";
 import { useAuth } from "./AuthContext";
 
 const OrderContext = createContext()
@@ -38,6 +38,14 @@ export function OrderProvider({ children }) {
     }
   }
 
+  async function updateAnOrder(id,status){
+    try {
+      await updateAnOrderApi(id,status)
+    } catch (error) {
+      throw new Error("Order didn't updated.",error)
+    }
+  }
+
   async function fetchOrdersRestaurant(id) {
     try {
       const response = await retrieveRestaurantOrder(id)
@@ -52,7 +60,7 @@ export function OrderProvider({ children }) {
 
 
   return (
-    <OrderContext.Provider value={{ orders, fetchOrdersCustomer, fetchOrdersRestaurant }}>
+    <OrderContext.Provider value={{ orders, fetchOrdersCustomer, fetchOrdersRestaurant,setOrders,updateAnOrder }}>
       {children}
     </OrderContext.Provider>
   )

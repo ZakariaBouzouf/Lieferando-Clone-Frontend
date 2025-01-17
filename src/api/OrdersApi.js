@@ -11,3 +11,7 @@ export function retrieveCustomerOrder(customer_id){
 export function retrieveRestaurantOrder(restaurant_id){
   return apiClient.get(`/orders/${restaurant_id}/restaurant`)
 }
+
+export function updateAnOrderApi(id,status){
+  return apiClient.put(`/orders/${id}`,{id,status})
+}

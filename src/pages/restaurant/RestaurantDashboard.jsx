@@ -10,7 +10,7 @@ import { useOrder } from '../../context/OrderContext';
 
 export default function RestaurantDashboard() {
   const { user } = useAuth();
-  const{fetchOrdersRestaurant,orders}=useOrder()
+  const{updateAnOrder,fetchOrdersRestaurant,orders,setOrders}=useOrder()
   const {menus,restaurants,retrieveMenus} = useRestaurant()
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('profile');
@@ -32,10 +32,11 @@ export default function RestaurantDashboard() {
     console.log("fetched menus ",menus)
   }, [user, navigate]);
 
-  const handleUpdateOrderStatus = (orderId, newStatus) => {
+  const handleUpdateOrderStatus =async (orderId, newStatus) => {
     setOrders(orders.map(order =>
       order.id === orderId ? { ...order, status: newStatus } : order
     ));
+    updateAnOrder(orderId,newStatus)
   };
 
   const handleUpdateRestaurant = (updatedData) => {
