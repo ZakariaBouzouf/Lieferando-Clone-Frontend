@@ -1,16 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Plus, Edit2, Trash2 } from 'lucide-react';
 import MenuItemForm from './MenuItemForm';
+import { useRestaurant } from '../../context/RestaurantContext';
 
-export default function MenuManager({ menu, setMenu }) {
+export default function MenuManager({ menu, setMenu,restaurantId }) {
   const [editingItem, setEditingItem] = useState(null);
   const [isAdding, setIsAdding] = useState(false);
+  const {addMenu,updateMenu,removeMenu} = useRestaurant()
 
+  useEffect(()=>{
+
+  },[menu])
   const handleSave = (item) => {
     if (editingItem) {
-      setMenu(menu.map(i => i.id === item.id ? item : i));
+      console.log("update menu",item)
+      updateMenu(item.id,item)
     } else {
-      setMenu([...menu, { ...item, id: Date.now().toString() }]);
+      addMenu(restaurantId, item)
     }
     setEditingItem(null);
     setIsAdding(false);
@@ -18,7 +24,7 @@ export default function MenuManager({ menu, setMenu }) {
 
   const handleDelete = (id) => {
     if (window.confirm('Are you sure you want to delete this item?')) {
-      setMenu(menu.filter(item => item.id !== id));
+      removeMenu(id)
     }
   };
 

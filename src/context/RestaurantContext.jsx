@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect,useState } from "react";
 import { retrieveAllRestaurants } from "../api/RestaurantApi";
-import { prefetchMenuApi,retrieveAllMenus } from "../api/MenusApi";
+import { addMenuApi, prefetchMenuApi,removeMenuApi,retrieveAllMenus, updateMenuApi } from "../api/MenusApi";
+import { updateAnOrderApi } from "../api/OrdersApi";
 
 const RestaurantContext = createContext()
 
@@ -32,13 +33,39 @@ export function RestaurantProvider({ children }) {
   async function retrieveMenus(id){
     try {
       const response = await retrieveAllMenus(id)
-      console.log(response)
+      // console.log(response)
       setMenus(response.data)
     } catch (error) {
       console.log(error)
     }
   }
 
+  async function addMenu(id,{name,description,price,category,image,available}){
+    try {
+      const response = await addMenuApi(id,{name,description,price,category,image,available})
+      console.log(response)
+      setMenus(prevMenus=>[...prevMenus,response.data])
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  async function updateMenu(id,{name,description,price,category,image,available}){
+    try {
+      const response = await updateMenuApi(id,{name,description,price,category,image,available})
+      console.log(response)
+      setMenus(menus.map(i => i.id === id ? {id,name,description,price,category,image,available} : i));
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  async function removeMenu(id){
+    try {
+      await removeMenuApi(id)
+      setMenus(menus.filter(item => item.id !== id));
+    } catch (error) {
+      console.log(error)
+    }
+  }
   async function prefetchMenu(id){
     if(fetchedMenus.includes(id)) {return}
 
@@ -56,7 +83,11 @@ export function RestaurantProvider({ children }) {
       restaurants,
       prefetchMenu,
       retrieveMenus,
-      menus
+      menus, 
+      setMenus,
+      addMenu,
+      updateMenu,
+      removeMenu
     }}>
       {children}
     </RestaurantContext.Provider>

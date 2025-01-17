@@ -2,31 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import MenuList from '../../components/restaurant/MenuList';
 import RestaurantHeader from '../../components/restaurant/RestaurantHeader';
-import { retrieveARestaurant } from '../../api/RestaurantApi';
 import { useRestaurant } from '../../context/RestaurantContext';
 
 export default function RestaurantPage() {
   const { id } = useParams();
   const [menu, setMenu] = useState(null);
-  const { restaurants, menus, retrieveMenu, menu: fetchedMenu } = useRestaurant()
+  const { restaurants, menus, retrieveMenus, menu: fetchedMenu } = useRestaurant()
   const restaurant = restaurants[id - 1]
 
-  // useEffect(() => {
-  //   const fetchMenus = async () => {
-  //     const response = await retieveAllMenus(id)
-  //     const foundMenus = response.data
-  //
-  //     setMenu(foundMenus);
-  //   };
-  //   fetchMenus();
-  //   console.log("Menus",menu)
-  // }, [id]);
-  // console.log("menus", menus)
   useEffect(() => {
     if (menus.length !== 0) {
       const foundedMenu = menus.filter(item => item.restaurantId === Number(id))
       if (foundedMenu.length === 0) {
-        retrieveMenu(id)
+        retrieveMenus(id)
         setMenu(fetchedMenu[0])
       } else {
         setMenu(foundedMenu[0].items)
@@ -41,7 +29,7 @@ export default function RestaurantPage() {
     return <div>Loading...</div>;
   }
 
-  console.log("menu", menu)
+  // console.log("menu", menu)
   console.log("fetchedMenu", fetchedMenu)
   return (
     <div className="max-w-7xl mx-auto px-4 pt-20 pb-12">

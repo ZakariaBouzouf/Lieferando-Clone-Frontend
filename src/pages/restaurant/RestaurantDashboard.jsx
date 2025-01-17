@@ -104,6 +104,7 @@ export default function RestaurantDashboard() {
           ) : (
             <MenuManager
               menu={menus}
+              restaurantId={user.userId}
               // setMenu={setMenu}
             />
           )}
