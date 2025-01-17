@@ -18,17 +18,19 @@ export function RestaurantProvider({ children }) {
   const [menus,setMenus]=useState([])
   const [fetchedMenus,setFetchedMenus]= useState([])
 
+  //Maybe remove it 
   useEffect(() => {
-    async function retrieveRestaurants() {
-      try {
-        const response = await retrieveAllRestaurants();
-        setRestaurants(response.data)
-      } catch (error) {
-        console.log(error)
-      }
-    }
     retrieveRestaurants()
   }, [])
+
+  async function retrieveRestaurants() {
+    try {
+      const response = await retrieveAllRestaurants();
+      setRestaurants(response.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   async function updateRestaurant(id,{name,description,image,isOpen}){
     try {
@@ -89,6 +91,7 @@ export function RestaurantProvider({ children }) {
   return (
     <RestaurantContext.Provider value={{
       restaurants,
+      retrieveRestaurants,
       prefetchMenu,
       retrieveMenus,
       updateRestaurant,

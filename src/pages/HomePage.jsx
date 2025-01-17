@@ -12,21 +12,11 @@ export default function HomePage() {
     openNow: false,
     freeDelivery: false
   });
-  // const [restaurants, setRestaurants] = useState([])
-  const {restaurants,prefetchMenu} = useRestaurant()
+  const {restaurants,retrieveRestaurants} = useRestaurant()
 
-  // useEffect(() => {
-  //   async function retrieveRestaurants() {
-  //     try {
-  //       const response = await retrieveAllRestaurants();
-  //       setRestaurants(response.data)
-  //       console.log(restaurants)
-  //     } catch (error) {
-  //       console.log(error)
-  //     }
-  //   }
-  //   retrieveRestaurants()
-  // }, [])
+  useEffect(() => {
+    retrieveRestaurants()
+  }, [])
 
   const filteredRestaurants = restaurants.filter(restaurant => {
     if (filters.openNow && !restaurant.isOpen) return false;

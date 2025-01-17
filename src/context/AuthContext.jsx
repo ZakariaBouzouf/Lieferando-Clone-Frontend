@@ -30,6 +30,7 @@ export function AuthProvider({ children }) {
           email: response.data.email,
           name: response.data.name,
           role: response.data.role,
+          restaurantId: response.data.restaurantId,
         });
       } catch (error) {
         console.error("No active session:", error.response?.data?.message);
@@ -48,7 +49,7 @@ export function AuthProvider({ children }) {
       const response = await loginApi(email, password)
       console.log(response)
       if (response.status == 200) {
-        setUser({ userId: response.data.userId, role: response.data.role })
+        setUser({ userId: response.data.userId, role: response.data.role,restaurantId:response.data.restaurantId })
         console.log("Log in", user)
         navigate("/")
       }
@@ -57,9 +58,9 @@ export function AuthProvider({ children }) {
     }
   };
 
-  async function register({ email, password, name, role, address }) {
+  async function register(registrationForm) {
     try {
-      const response = await signUpApi(email, password, name, role, address)
+      const response = await signUpApi(registrationForm)
       if (response.status == 200) {
         console.log("Done", response)
         navigate("/login")

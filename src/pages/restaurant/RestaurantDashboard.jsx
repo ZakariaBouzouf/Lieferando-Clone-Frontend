@@ -19,15 +19,15 @@ export default function RestaurantDashboard() {
 
   useEffect(() => {
     console.log(user)
-    // if (!user || user.role !== 'restaurant') {
-    //   navigate('/');
-    //   return;
-    // }
-    //TODO: still need to fix the right restaurant for the right user
-    setRestaurant(restaurants[0])
+    if (!user || user.role !== 'restaurant') {
+      navigate('/');
+      return;
+    }
+
     if(user != undefined){
       retrieveMenus(user?.userId)
       fetchOrdersRestaurant(user?.userId)
+      setRestaurant(restaurants.filter(restau=>restau.id == user?.restaurantId)[0])
     }
     console.log("fetched menus ",menus)
   }, [user, navigate]);
@@ -44,7 +44,7 @@ export default function RestaurantDashboard() {
       ...prev,
       ...updatedData
     }));
-    updateRestaurant(user.userId,updatedData)
+    updateRestaurant(user.restaurantId,updatedData)
   };
 
   if (!restaurant) {
@@ -105,7 +105,6 @@ export default function RestaurantDashboard() {
             <MenuManager
               menu={menus}
               restaurantId={user.userId}
-              // setMenu={setMenu}
             />
           )}
         </div>
