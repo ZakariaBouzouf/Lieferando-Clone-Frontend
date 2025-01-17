@@ -11,7 +11,7 @@ import { useOrder } from '../../context/OrderContext';
 export default function RestaurantDashboard() {
   const { user } = useAuth();
   const{updateAnOrder,fetchOrdersRestaurant,orders,setOrders}=useOrder()
-  const {menus,restaurants,retrieveMenus} = useRestaurant()
+  const {menus,restaurants,retrieveMenus,updateRestaurant} = useRestaurant()
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('profile');
   // const [orders, setOrders] = useState([]);
@@ -44,7 +44,7 @@ export default function RestaurantDashboard() {
       ...prev,
       ...updatedData
     }));
-    // In a real app, make API call to update restaurant data
+    updateRestaurant(user.userId,updatedData)
   };
 
   if (!restaurant) {

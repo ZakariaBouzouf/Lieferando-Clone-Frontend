@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect,useState } from "react";
-import { retrieveAllRestaurants } from "../api/RestaurantApi";
+import { retrieveAllRestaurants, updateRestaurantApi } from "../api/RestaurantApi";
 import { addMenuApi, prefetchMenuApi,removeMenuApi,retrieveAllMenus, updateMenuApi } from "../api/MenusApi";
 import { updateAnOrderApi } from "../api/OrdersApi";
 
@@ -30,10 +30,18 @@ export function RestaurantProvider({ children }) {
     retrieveRestaurants()
   }, [])
 
+  async function updateRestaurant(id,{name,description,image,isOpen}){
+    try {
+      const response = await updateRestaurantApi(id,{name,description,image,isOpen})
+      setRestaurants(restaurants.map(prevRestau => prevRestau.id === id ? {id,name,description,image,isOpen} : prevRestau))
+    } catch (error) {
+      throw new Error("Something went wrong.")
+    }
+  }
+
   async function retrieveMenus(id){
     try {
       const response = await retrieveAllMenus(id)
-      // console.log(response)
       setMenus(response.data)
     } catch (error) {
       console.log(error)
@@ -83,6 +91,7 @@ export function RestaurantProvider({ children }) {
       restaurants,
       prefetchMenu,
       retrieveMenus,
+      updateRestaurant,
       menus, 
       setMenus,
       addMenu,
