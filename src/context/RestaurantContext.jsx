@@ -15,7 +15,6 @@ export function useRestaurant() {
 export function RestaurantProvider({ children }) {
   const [restaurants, setRestaurants] = useState([])
   const [menus,setMenus]=useState([])
-  const [menu,setMenu]=useState([])
   const [fetchedMenus,setFetchedMenus]= useState([])
 
   useEffect(() => {
@@ -57,7 +56,6 @@ export function RestaurantProvider({ children }) {
       restaurants,
       prefetchMenu,
       retrieveMenus,
-      menu,
       menus
     }}>
       {children}

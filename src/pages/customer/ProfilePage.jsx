@@ -3,9 +3,11 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { User, MapPin, Phone, Clock } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { useOrder } from '../../context/OrderContext';
 
 export default function ProfilePage() {
-  const { user, login,orders , fetchOrdersCustomer } = useAuth();
+  const { user, login} = useAuth();
+  const { fetchOrdersCustomer,orders }= useOrder();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -15,10 +17,6 @@ export default function ProfilePage() {
     address: user?.address || ''
   });
 
-
-  // useEffect(() => {
-  //   fetchOrders(user?.userId)
-  // }, [])
   useEffect(() => {
     if(user != undefined){
       fetchOrdersCustomer(user?.userId)
@@ -28,7 +26,6 @@ export default function ProfilePage() {
   // // const customerOrders = orders?.map(order => order.items)
   // // console.log(customerOrders)
 
-  // Mock orders - in a real app, fetch from API
   // const [orders] = useState([
   //   {
   //     id: '1',

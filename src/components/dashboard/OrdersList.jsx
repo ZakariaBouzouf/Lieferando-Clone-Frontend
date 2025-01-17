@@ -3,13 +3,6 @@ import { formatDistanceToNow } from 'date-fns';
 import { useAuth } from '../../context/AuthContext';
 
 export default function OrdersList({ orders, onUpdateStatus }) {
-  const {user,fetchOrdersRestaurant}= useAuth()
-  useEffect(() => {
-    if (user != undefined) {
-      fetchOrdersRestaurant(user?.userId)
-    }
-  }, [user]);
-  console.log("orders", orders)
   const [confirmationState, setConfirmationState] = useState({
     isOpen: false,
     orderId: null,
