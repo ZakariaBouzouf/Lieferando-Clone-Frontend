@@ -1,7 +1,7 @@
 import { apiClient } from "./ApiClient";
 
-export function creatingOrder(restaurant_id,customer_id,items,status,restaurant){
-  return apiClient.post("/orders",{restaurant_id,customer_id,items,status,restaurant})
+export function creatingOrder(restaurant_id,customer_id,items,status,restaurant_name,total){
+  return apiClient.post("/orders",{restaurant_id,customer_id,items,status,restaurant_name,total})
 }
 
 export function retrieveCustomerOrder(customer_id){

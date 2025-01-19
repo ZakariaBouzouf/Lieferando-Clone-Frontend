@@ -18,13 +18,15 @@ export function OrderProvider({ children }) {
 
   useEffect(() => {
     if (user != undefined) {
-      if (user.status === "restaurant") {
-        fetchOrdersRestaurant(user?.userId)
+      if (user?.role === "restaurant") {
+        console.log("RESID", user?.restaurantId)
+        fetchOrdersRestaurant(user?.restaurantId)
       } else {
+        console.log("CALLEd")
         fetchOrdersCustomer(user?.userId)
       }
     }
-  }, [])
+  }, [user])
 
   async function fetchOrdersCustomer(id) {
     try {
@@ -38,11 +40,11 @@ export function OrderProvider({ children }) {
     }
   }
 
-  async function updateAnOrder(id,status){
+  async function updateAnOrder(id, status) {
     try {
-      await updateAnOrderApi(id,status)
+      await updateAnOrderApi(id, status)
     } catch (error) {
-      throw new Error("Order didn't updated.",error)
+      throw new Error("Order didn't updated.", error)
     }
   }
 
@@ -60,7 +62,7 @@ export function OrderProvider({ children }) {
 
 
   return (
-    <OrderContext.Provider value={{ orders, fetchOrdersCustomer, fetchOrdersRestaurant,setOrders,updateAnOrder }}>
+    <OrderContext.Provider value={{ orders, fetchOrdersCustomer, fetchOrdersRestaurant, setOrders, updateAnOrder }}>
       {children}
     </OrderContext.Provider>
   )

@@ -5,7 +5,9 @@ import RestaurantHeader from '../../components/restaurant/RestaurantHeader';
 import { useRestaurant } from '../../context/RestaurantContext';
 
 export default function RestaurantPage() {
-  const { id } = useParams();
+  // const { id } = useParams();
+  const params = useParams();
+  const id = Number(params.id);
   const [menu, setMenu] = useState(null);
   const { restaurants, menus, retrieveMenus, menu: fetchedMenu } = useRestaurant()
   const restaurant = restaurants[id - 1]

@@ -25,8 +25,8 @@ export default function RestaurantDashboard() {
     }
 
     if(user != undefined){
-      retrieveMenus(user?.userId)
-      fetchOrdersRestaurant(user?.userId)
+      retrieveMenus(user?.restaurantId)
+      // fetchOrdersRestaurant(user?.restaurantId)
       setRestaurant(restaurants.filter(restau=>restau.id == user?.restaurantId)[0])
     }
     console.log("fetched menus ",menus)

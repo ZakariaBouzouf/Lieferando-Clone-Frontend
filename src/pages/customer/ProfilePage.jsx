@@ -185,7 +185,7 @@ export default function ProfilePage() {
                 <div key={order.id} className="border rounded-lg p-4">
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <h3 className="font-semibold">{order.restaurant}</h3>
+                      <h3 className="font-semibold">{order.restaurant_name}</h3>
                       <div className="flex items-center text-sm text-gray-500 mt-1">
                         <Clock className="h-4 w-4 mr-1" />
                         {/* {formatDistanceToNow(new Date(order.date), { addSuffix: true })} */}
@@ -204,7 +204,7 @@ export default function ProfilePage() {
                     ))}
                     <div className="border-t pt-2 mt-2 flex justify-between font-medium">
                       <span>Total</span>
-                      {/* <span>${order?.total.toFixed(2)}</span> */}
+                      <span>${order?.total.toFixed(2)}</span>
                     </div>
                   </div>
                 </div>

@@ -15,3 +15,7 @@ export function logoutApi(){
 export function sessionApi(){
   return apiClient.get("/auth/session")
 }
+export function balanceCheck(total){
+  console.log(total)
+  return apiClient.post("/auth/balance_check",{"total":total})
+}

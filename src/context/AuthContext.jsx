@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { loginApi, logoutApi, sessionApi, signUpApi } from '../api/AuthApi';
-import {  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import _default from 'eslint-plugin-react-refresh';
 
 const AuthContext = createContext(undefined);
@@ -31,6 +31,8 @@ export function AuthProvider({ children }) {
           name: response.data.name,
           role: response.data.role,
           restaurantId: response.data.restaurantId,
+          balance: response?.data?.balance.toFixed(2)
+          
         });
       } catch (error) {
         console.error("No active session:", error.response?.data?.message);
@@ -49,7 +51,7 @@ export function AuthProvider({ children }) {
       const response = await loginApi(email, password)
       console.log(response)
       if (response.status == 200) {
-        setUser({ userId: response.data.userId, role: response.data.role,restaurantId:response.data.restaurantId })
+        setUser({ userId: response.data.userId, name: response.data.name, role: response.data.role, restaurantId: response.data.restaurantId,balance:response.data.balance })
         console.log("Log in", user)
         navigate("/")
       }

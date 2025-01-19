@@ -27,6 +27,9 @@ export default function Navbar() {
                 </span>
               )}
             </Link>
+            <div>
+              {user?.balance}
+            </div>
 
             {user ? (
               <div className="flex items-center space-x-2">

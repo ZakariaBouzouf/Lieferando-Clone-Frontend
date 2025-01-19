@@ -12,6 +12,7 @@ import CheckoutPage from './pages/CheckoutPage';
 import RestaurantDashboard from './pages/restaurant/RestaurantDashboard';
 import ProfilePage from './pages/customer/ProfilePage';
 import { OrderProvider } from './context/OrderContext';
+import { Toaster } from 'sonner';
 
 function App() {
 
@@ -19,9 +20,10 @@ function App() {
     <Router>
       <AuthProvider>
         <RestaurantProvider>
-          <OrderProvider>
-            <CartProvider>
+          <CartProvider>
+            <OrderProvider>
               <div className="min-h-screen bg-gray-50">
+                <Toaster position="top-center" richColors/>
                 <Navbar />
                 <Routes>
                   <Route path="/" element={<HomePage />} />
@@ -34,8 +36,8 @@ function App() {
                   <Route path="/profile" element={<ProfilePage />} />
                 </Routes>
               </div>
-            </CartProvider>
-          </OrderProvider>
+            </OrderProvider>
+          </CartProvider>
         </RestaurantProvider>
       </AuthProvider>
     </Router>
