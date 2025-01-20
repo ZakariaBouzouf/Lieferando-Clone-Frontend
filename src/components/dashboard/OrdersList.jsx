@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, {  useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
-import { useAuth } from '../../context/AuthContext';
+import { Filter, ArrowUpDown } from 'lucide-react';
 
 export default function OrdersList({ orders, onUpdateStatus }) {
   const [confirmationState, setConfirmationState] = useState({
@@ -8,6 +8,13 @@ export default function OrdersList({ orders, onUpdateStatus }) {
     orderId: null,
     newStatus: null
   });
+
+  // Filter states
+   const [filters, setFilters] = useState({
+     status: 'all',
+     sortOrder: 'desc' 
+   });
+   const [showFilters, setShowFilters] = useState(false);
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -38,9 +45,69 @@ export default function OrdersList({ orders, onUpdateStatus }) {
     setConfirmationState({ isOpen: false, orderId: null, newStatus: null });
   };
 
+
+   const handleFilterChange = (e) => {
+       const { name, value } = e.target;
+       setFilters(prev => ({
+         ...prev,
+         [name]: value
+       }));
+     };
+
+  const toggleSortOrder = () => {
+    setFilters(prev => ({
+      ...prev,
+      sortOrder: prev.sortOrder === 'desc' ? 'asc' : 'desc'
+    }));
+  };
+   // Filter and sort orders
+    const filteredOrders = [...orders]
+      .filter(order => {
+        // Status filter
+        if (filters.status !== 'all' && order.status !== filters.status) {
+          return false;
+        }
+        return true;
+      })
+      .sort((a, b) => {
+        // Sort by creation time
+        const dateA = new Date(a.datetime_added).getTime();
+        const dateB = new Date(b.datetime_added).getTime();
+        return filters.sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+      });
+
   return (
     <div className="bg-white shadow overflow-hidden sm:rounded-md relative">
-      {/* Confirmation Dialog */}
+    {/* Filter and Sort Controls */}
+          <div className="p-4 border-b border-gray-200">
+            <div className="flex flex-wrap items-center gap-4">
+              <div className="flex-1 min-w-[200px]">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <select
+                  name="status"
+                  value={filters.status}
+                  onChange={handleFilterChange}
+                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm"
+                >
+                  <option value="all">All Statuses</option>
+                  {statuses.map(status => (
+                    <option key={status} value={status}>
+                      {status.charAt(0).toUpperCase() + status.slice(1)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              
+              <button
+                onClick={toggleSortOrder}
+                className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+              >
+                <ArrowUpDown className="h-4 w-4" />
+                <span>{filters.sortOrder === 'desc' ? 'Newest First' : 'Oldest First'}</span>
+              </button>
+            </div>
+          </div>
+     {/* Confirmation Dialog */}
       {confirmationState.isOpen && (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-sm mx-4">
@@ -71,7 +138,7 @@ export default function OrdersList({ orders, onUpdateStatus }) {
 
       {/* Orders List */}
       <ul className="divide-y divide-gray-200">
-        {orders.map(order => (
+        {filteredOrders.map(order => (
           <li key={order.id}>
             <div className="px-4 py-4 sm:px-6">
               <div className="flex items-center justify-between">
@@ -85,14 +152,14 @@ export default function OrdersList({ orders, onUpdateStatus }) {
                 </div>
                 <div className="ml-2 flex-shrink-0 flex">
                   <p className="text-sm text-gray-500">
-                    {/* {formatDistanceToNow(new Date(order.createdAt), { addSuffix: true })} */}
+                    {formatDistanceToNow(new Date(order.datetime_added), { addSuffix: true })}
                   </p>
                 </div>
               </div>
-
+              
               <div className="mt-2">
                 <div className="text-sm text-gray-900">
-                  Customer: {order.customer_id}
+                  Customer: {order.customer}
                 </div>
                 <div className="mt-2 text-sm text-gray-500">
                   {order.items.map((item, index) => (
@@ -103,10 +170,10 @@ export default function OrdersList({ orders, onUpdateStatus }) {
                   ))}
                 </div>
               </div>
-
+              
               <div className="mt-2 flex justify-between items-center">
                 <p className="text-sm font-medium text-gray-900">
-                  {/* Total: ${order.total.toFixed(2)} */}
+                  Total: ${order.total.toFixed(2)}
                 </p>
                 <div className="flex items-center space-x-2">
                   <select

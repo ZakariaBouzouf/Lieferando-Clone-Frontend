@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { User, MapPin, Phone, Clock } from 'lucide-react';
+import { ArrowUpDown, User, MapPin, Phone, Clock } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { useOrder } from '../../context/OrderContext';
 
 export default function ProfilePage() {
-  const { user, login} = useAuth();
-  const { fetchOrdersCustomer,orders }= useOrder();
+  const { user, login } = useAuth();
+  const { fetchOrdersCustomer, orders } = useOrder();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -18,40 +18,18 @@ export default function ProfilePage() {
   });
 
   useEffect(() => {
-    if(user != undefined){
+    if (user != undefined) {
       fetchOrdersCustomer(user?.userId)
     }
-  }, [user,navigate])
-  // console.log(orders)
-  // // const customerOrders = orders?.map(order => order.items)
-  // // console.log(customerOrders)
+  }, [user, navigate])
 
-  // const [orders] = useState([
-  //   {
-  //     id: '1',
-  //     restaurant: 'Pizza Paradise',
-  //     items: [
-  //       { name: 'Margherita Pizza', quantity: 2, price: 14.99 },
-  //       { name: 'Garlic Bread', quantity: 1, price: 4.99 }
-  //     ],
-  //     total: 34.97,
-  //     status: 'delivered',
-  //     date: new Date(Date.now() - 86400000).toISOString()
-  //   },
-  //   {
-  //     id: '2',
-  //     restaurant: 'Burger Bliss',
-  //     items: [
-  //       { name: 'Classic Cheeseburger', quantity: 1, price: 11.99 },
-  //       { name: 'Fries', quantity: 1, price: 4.99 }
-  //     ],
-  //     total: 16.98,
-  //     status: 'preparing',
-  //     date: new Date().toISOString()
-  //   }
-  // ]);
+  // Filters state
+  const [filters, setFilters] = useState({
+    status: 'all',
+    sortOrder: 'desc' // 'desc' for newest first, 'asc' for oldest first
+  });
 
-  console.log('orders',orders)
+  console.log('orders', orders)
 
   const handleChange = (e) => {
     setFormData(prev => ({
@@ -65,6 +43,34 @@ export default function ProfilePage() {
     login({ ...user, ...formData }); // Update user data
     setIsEditing(false);
   };
+
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const toggleSortOrder = () => {
+    setFilters(prev => ({
+      ...prev,
+      sortOrder: prev.sortOrder === 'desc' ? 'asc' : 'desc'
+    }));
+  };
+
+  const filteredOrders = [...orders]
+    .filter(order => {
+      if (filters.status !== 'all' && order.status !== filters.status) {
+        return false;
+      }
+      return true;
+    })
+    .sort((a, b) => {
+      const dateA = new Date(a.datetime_added).getTime();
+      const dateB = new Date(b.datetime_added).getTime();
+      return filters.sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+    });
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -180,15 +186,42 @@ export default function ProfilePage() {
         <div className="lg:col-span-2">
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-xl font-semibold mb-6">Order History</h2>
+            {/* Filter Controls */}
+            <div className="mb-6 flex flex-wrap items-center gap-4">
+              <div className="flex-1 min-w-[200px]">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <select
+                  name="status"
+                  value={filters.status}
+                  onChange={handleFilterChange}
+                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm"
+                >
+                  <option value="all">All Statuses</option>
+                  <option value="pending">Pending</option>
+                  <option value="preparing">Preparing</option>
+                  <option value="delivering">Delivering</option>
+                  <option value="delivered">Delivered</option>
+                </select>
+              </div>
+
+              <button
+                onClick={toggleSortOrder}
+                className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+              >
+                <ArrowUpDown className="h-4 w-4" />
+                <span>{filters.sortOrder === 'desc' ? 'Newest First' : 'Oldest First'}</span>
+              </button>
+            </div>
+
             <div className="space-y-6">
-              {orders?.map(order => (
+              {filteredOrders?.map(order => (
                 <div key={order.id} className="border rounded-lg p-4">
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <h3 className="font-semibold">{order.restaurant_name}</h3>
                       <div className="flex items-center text-sm text-gray-500 mt-1">
                         <Clock className="h-4 w-4 mr-1" />
-                        {/* {formatDistanceToNow(new Date(order.date), { addSuffix: true })} */}
+                        {formatDistanceToNow(new Date(order.datetime_added), { addSuffix: true })}
                       </div>
                     </div>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
