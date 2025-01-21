@@ -18,7 +18,7 @@ export default function DashboardStats({ orders }) {
           </div>
           <div className="ml-4">
             <p className="text-sm font-medium text-gray-600">Revenue</p>
-            <p className="text-lg font-semibold">${stats.revenue.toFixed(2)}</p>
+            <p className="text-lg font-semibold">{stats.revenue.toFixed(2)}€</p>
           </div>
         </div>
       </div>

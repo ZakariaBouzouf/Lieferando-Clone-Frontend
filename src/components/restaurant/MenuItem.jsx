@@ -27,7 +27,7 @@ export default function MenuItem({ item, restaurantId }) {
       <p className="text-gray-600 mt-1">{item.description}</p>
       
       <div className="mt-4 flex items-center justify-between">
-        <span className="text-lg font-bold">${item.price.toFixed(2)}</span>
+        <span className="text-lg font-bold">{item.price.toFixed(2)}€</span>
         
         <div className="flex items-center space-x-2">
           <select

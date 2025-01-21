@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
-import { MapPin, ArrowUpDown } from 'lucide-react';
+import { MapPin, ArrowUpDown,MessageSquare } from 'lucide-react';
 
 export default function OrdersList({ orders, onUpdateStatus }) {
   const [confirmationState, setConfirmationState] = useState({
@@ -62,19 +62,19 @@ export default function OrdersList({ orders, onUpdateStatus }) {
   };
   // Filter and sort orders
   const filteredOrders = [...orders]
-    .filter(order => {
-      // Status filter
-      if (filters.status !== 'all' && order.status !== filters.status) {
-        return false;
-      }
-      return true;
-    })
-    .sort((a, b) => {
-      // Sort by creation time
-      const dateA = new Date(a.datetime_added).getTime();
-      const dateB = new Date(b.datetime_added).getTime();
-      return filters.sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
-    });
+  .filter(order => {
+    // Status filter
+    if (filters.status !== 'all' && order.status !== filters.status) {
+      return false;
+    }
+    return true;
+  })
+  .sort((a, b) => {
+    // Sort by creation time
+    const dateA = new Date(a.datetime_added).getTime();
+    const dateB = new Date(b.datetime_added).getTime();
+    return filters.sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+  });
 
   return (
     <div className="bg-white shadow overflow-hidden sm:rounded-md relative">
@@ -156,33 +156,29 @@ export default function OrdersList({ orders, onUpdateStatus }) {
                   </p>
                 </div>
               </div>
-
-              <div className="mt-2">
-                <div className="text-sm text-gray-900">
-                  Customer: {order.customer_name}
+              
+              <div className="mt-2 sm:flex sm:justify-between">
+                <div className="sm:flex">
+                  <div className="mr-6">
+                    <div className="text-sm text-gray-900">
+                      <span className="font-medium">Customer:</span> {order.customer_name}
+                    </div>
+                    <div className="mt-2 flex items-center text-sm text-gray-500">
+                      <MapPin className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
+                      <p>
+                        {order.address}
+                        {order.zipCode && <span className="ml-1">({order.zipCode})</span>}
+                      </p>
+                    </div>
+                    {order.note && (
+                      <div className="mt-2 flex items-start text-sm text-gray-500">
+                        <MessageSquare className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400 mt-0.5" />
+                        <p className="whitespace-pre-wrap">{order.note}</p>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div className="mt-2 flex items-center text-sm text-gray-500">
-                  <MapPin className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
-                  <p>
-                    {order.address}
-                    {order.zipCode && <span className="ml-1">({order.zipCode})</span>}
-                  </p>
-                </div>
-                <div className="mt-2 text-sm text-gray-500">
-                  {order.items.map((item, index) => (
-                    <span key={index}>
-                      {item.quantity}x {item.name}
-                      {index < order.items.length - 1 ? ', ' : ''}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mt-2 flex justify-between items-center">
-                <p className="text-sm font-medium text-gray-900">
-                  Total: ${order.total.toFixed(2)}
-                </p>
-                <div className="flex items-center space-x-2">
+                <div className="mt-2 flex items-center text-sm sm:mt-0">
                   <select
                     value={order.status}
                     onChange={(e) => handleStatusChange(order.id, e.target.value)}
@@ -194,6 +190,24 @@ export default function OrdersList({ orders, onUpdateStatus }) {
                       </option>
                     ))}
                   </select>
+                </div>
+              </div>
+
+              <div className="mt-4">
+                <div className="bg-gray-50 rounded-md p-3">
+                  <h4 className="text-sm font-medium text-gray-900 mb-2">Order Items:</h4>
+                  <div className="space-y-2">
+                    {order.items.map((item, index) => (
+                      <div key={index} className="flex justify-between text-sm">
+                        <span>{item.quantity}x {item.name}</span>
+                        <span className="text-gray-600">{(item.price * item.quantity).toFixed(2)}€</span>
+                      </div>
+                    ))}
+                    <div className="border-t pt-2 mt-2 flex justify-between font-medium">
+                      <span>Total</span>
+                      <span>{order.total.toFixed(2)}€</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

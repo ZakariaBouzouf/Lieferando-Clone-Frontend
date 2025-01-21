@@ -16,6 +16,9 @@ export function sessionApi(){
   return apiClient.get("/auth/session")
 }
 export function balanceCheck(total){
-  console.log(total)
   return apiClient.post("/auth/balance_check",{"total":total})
+}
+
+export function updateUserApi(id,data){
+  return apiClient.put(`/auth/update/${id}`,data)
 }

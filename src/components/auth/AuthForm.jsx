@@ -252,7 +252,7 @@ export default function AuthForm({ type, onSubmit, error }) {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Minimum Order Amount ($)</label>
+                  <label className="block text-sm font-medium text-gray-700">Minimum Order Amount (€)</label>
                   <input
                     type="number"
                     name="minOrder"

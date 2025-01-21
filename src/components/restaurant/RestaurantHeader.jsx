@@ -37,7 +37,7 @@ export default function RestaurantHeader({ restaurant }) {
               <Bike className="h-4 w-4 text-gray-400 mr-1" />
               <span>
                 { restaurant.restaurant !== undefined ? 
-                (restaurant?.deliveryFee === 0 ? 'Free Delivery' : `€${restaurant?.deliveryFee.toFixed(2)}`) : ('loading')
+                (restaurant?.deliveryFee === 0 ? 'Free Delivery' : `${restaurant?.deliveryFee.toFixed(2)}€`) : ('loading')
                 } 
               </span>
             </div>

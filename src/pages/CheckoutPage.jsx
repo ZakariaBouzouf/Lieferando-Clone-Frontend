@@ -8,7 +8,7 @@ import { creatingOrder } from '../api/OrdersApi';
 import { ORDER_STATUS } from '../utils/constants';
 import { useRestaurant } from '../context/RestaurantContext';
 import { balanceCheck } from '../api/AuthApi';
-import { toast, Toaster } from 'sonner';
+import { toast } from 'sonner';
 
 export default function CheckoutPage() {
   const { items, total, clearCart } = useCart();
@@ -37,7 +37,6 @@ export default function CheckoutPage() {
   }
 
   function checkingOrders(orders) {
-
     const groupedData = Object.values(
       orders.reduce((acc, item) => {
         const { restaurantId, ...rest } = item;
@@ -69,6 +68,7 @@ export default function CheckoutPage() {
       await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API call
 
       const orders = checkingOrders(items)
+      // orders.map(ord=>[...ord,...formData])
       let total_orders = 0
       if (orders.length >1 ){
          total_orders = orders.reduce((acc,item)=> acc.total + item.total)
@@ -81,7 +81,8 @@ export default function CheckoutPage() {
       const response = await balanceCheck(total_orders)
       if( response.status == 200){
       orders.forEach(async (order) => {
-        const response = await creatingOrder(order.restaurant_id, order.customer_id, order.items, order.status, order.restaurant_name, order.total)
+        const response = await creatingOrder({restaurant_id:order.restaurant_id,customer_id: order.customer_id,items: order.items,status: order.status,restaurant_name: order.restaurant_name,total: order.total,note: order.note,...formData})
+
         if (response.status !== 200) {
           throw new Error("Failed to send data");
         }

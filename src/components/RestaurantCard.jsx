@@ -39,7 +39,7 @@ export default function RestaurantCard({ restaurant }) {
             <div className="flex items-center">
               <Bike className="h-4 w-4 text-gray-400 mr-1" />
               <span>
-                {restaurant.deliveryFee === 0 ? 'Free Delivery' : `€${restaurant.deliveryFee.toFixed(2)}`}
+                {restaurant.deliveryFee === 0 ? 'Free Delivery' : `${restaurant.deliveryFee.toFixed(2)}€`}
               </span>
             </div>
           </div>

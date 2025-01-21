@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, MapPin } from 'lucide-react';
+import { Search  } from 'lucide-react';
 
 export default function SearchFilters({
   search,
@@ -22,17 +22,6 @@ export default function SearchFilters({
             className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
           />
         </div>
-
-        {/* <div className="relative"> */}
-        {/*   <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" /> */}
-        {/*   <input */}
-        {/*     type="text" */}
-        {/*     placeholder="Enter your location..." */}
-        {/*     value={location} */}
-        {/*     onChange={(e) => setLocation(e.target.value)} */}
-        {/*     className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent" */}
-        {/*   /> */}
-        {/* </div> */}
 
         <div className="flex items-center space-x-4">
           <label className="flex items-center space-x-2">

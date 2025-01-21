@@ -58,7 +58,7 @@ export default function MenuManager({ menu, setMenu,restaurantId }) {
             <div className="flex justify-between items-start">
               <div>
                 <h3 className="font-semibold">{item.name}</h3>
-                <p className="text-gray-600">${item.price.toFixed(2)}</p>
+                <p className="text-gray-600">{item.price.toFixed(2)}€</p>
                 <p className="text-sm text-gray-500">{item.category}</p>
               </div>
               <div className="flex space-x-2">

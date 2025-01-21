@@ -16,7 +16,7 @@ export default function OrderSummary({ items, total }) {
               <span className="font-medium">{item.name}</span>
               <span className="text-gray-600 ml-2">x{item.quantity}</span>
             </div>
-            <span>${(item.price * item.quantity).toFixed(2)}</span>
+            <span>{(item.price * item.quantity).toFixed(2)}€</span>
           </div>
         ))}
       </div>
@@ -24,19 +24,19 @@ export default function OrderSummary({ items, total }) {
       <div className="border-t mt-4 pt-4 space-y-2">
         <div className="flex justify-between text-sm">
           <span>Subtotal</span>
-          <span>${total.toFixed(2)}</span>
+          <span>{total.toFixed(2)}€</span>
         </div>
         <div className="flex justify-between text-sm">
           <span>Delivery Fee</span>
-          <span>${deliveryFee.toFixed(2)}</span>
+          <span>{deliveryFee.toFixed(2)}€</span>
         </div>
         <div className="flex justify-between text-sm">
           <span>Tax</span>
-          <span>${tax.toFixed(2)}</span>
+          <span>{tax.toFixed(2)}€</span>
         </div>
         <div className="border-t pt-2 flex justify-between font-semibold">
           <span>Total</span>
-          <span>${finalTotal.toFixed(2)}</span>
+          <span>{finalTotal.toFixed(2)}€</span>
         </div>
       </div>
     </div>

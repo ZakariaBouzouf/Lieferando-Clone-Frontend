@@ -26,7 +26,7 @@ export default function CartItem({ item }) {
               <option key={num} value={num}>{num}</option>
             ))}
           </select>
-          <span className="font-semibold">${(item.price * item.quantity).toFixed(2)}</span>
+          <span className="font-semibold">{(item.price * item.quantity).toFixed(2)}€</span>
         </div>
       </div>
       

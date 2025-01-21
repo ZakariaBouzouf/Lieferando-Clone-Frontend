@@ -10,7 +10,7 @@ export default function HomePage() {
   const [filters, setFilters] = useState({
     openNow: false,
     freeDelivery: false,
-    deliveryEligibility:true,
+    deliveryEligibility:false,
   });
   const {restaurants,retrieveRestaurants} = useRestaurant()
   const {user}= useAuth()
@@ -24,7 +24,7 @@ export default function HomePage() {
     if (filters.freeDelivery && restaurant.deliveryFee > 0) return false;
     const parsedZips = restaurant.zipCodes.map(code => parseInt(code)).filter(n => !isNaN(n))
     console.log("parsedZip",parsedZips)
-    if (filters.deliveryEligibility && !parsedZips.includes(user.zipCode)) return false;
+    if (filters.deliveryEligibility && !parsedZips.includes(user?.zipCode)) return false;
 
     const searchLower = search.toLowerCase();
     return (
