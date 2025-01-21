@@ -14,22 +14,23 @@ export default function AuthForm({ type, onSubmit, error }) {
     // Restaurant specific fields
     restaurantName: '',
     description: '',
-    deliveryFee:'',
+    deliveryFee: '',
     image: '',
     cuisine: [],
     minOrder: '',
     isOpen: true,
     openingTime: '09:00',
     closingTime: '22:00',
-    deliveryRadius: ''
+    zipCodes: []
   });
 
   const [tempCuisine, setTempCuisine] = useState('');
+  const [tempZipCode, setTempZipCode] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const submitData = { ...formData };
-    
+
     if (formData.role === USER_ROLES.RESTAURANT) {
       submitData.restaurant = {
         name: formData.restaurantName,
@@ -42,10 +43,10 @@ export default function AuthForm({ type, onSubmit, error }) {
         closingTime: formData.closingTime,
         address: formData.address,
         zipCode: formData.zipCode,
-        deliveryRadius: parseInt(formData.deliveryRadius)
+        zipCodes: formData.zipCodes
       };
     }
-    console.log('data',submitData)
+    console.log('data', submitData)
 
     onSubmit(submitData);
   };
@@ -75,6 +76,24 @@ export default function AuthForm({ type, onSubmit, error }) {
     }));
   };
 
+  const handleAddZipCode = () => {
+    const zipCode = tempZipCode.trim();
+    if (zipCode && !formData.zipCodes.includes(zipCode)) {
+      setFormData(prev => ({
+        ...prev,
+        zipCodes: [...prev.zipCodes, zipCode]
+      }));
+      setTempZipCode('');
+    }
+  };
+
+  const handleRemoveZipCode = (zipCodeToRemove) => {
+    setFormData(prev => ({
+      ...prev,
+      zipCodes: prev.zipCodes.filter(z => z !== zipCodeToRemove)
+    }));
+  };
+
   return (
     <div className="max-w-md w-full mx-auto space-y-8">
       <div>
@@ -82,12 +101,12 @@ export default function AuthForm({ type, onSubmit, error }) {
           {type === 'login' ? 'Sign in to your account' : 'Create your account'}
         </h2>
       </div>
-      
+
       <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
         {error && (
           <div className="text-red-500 text-center">{error}</div>
         )}
-        
+
         {type === 'register' && (
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
@@ -150,7 +169,7 @@ export default function AuthForm({ type, onSubmit, error }) {
             {formData.role === USER_ROLES.RESTAURANT && (
               <div className="space-y-6 border-t pt-6">
                 <h3 className="text-lg font-medium text-gray-900">Restaurant Details</h3>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Restaurant Name</label>
                   <input
@@ -293,6 +312,19 @@ export default function AuthForm({ type, onSubmit, error }) {
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
                   />
                 </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">ZIP Code</label>
+                  <input
+                    type="text"
+                    name="zipCode"
+                    required
+                    value={formData.zipCode}
+                    onChange={handleChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
+                  />
+                </div>
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Delivery Fee</label>
                   <input
@@ -304,31 +336,44 @@ export default function AuthForm({ type, onSubmit, error }) {
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">ZIP Code</label>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Delivery ZIP Codes</label>
+                  <div className="mt-1 flex items-center space-x-2">
                     <input
                       type="text"
-                      name="zipCode"
-                      required
-                      value={formData.zipCode}
-                      onChange={handleChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
+                      value={tempZipCode}
+                      onChange={(e) => setTempZipCode(e.target.value)}
+                      placeholder="Add ZIP code"
+                      className="block w-full rounded-md border-gray-300 shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
                     />
+                    <button
+                      type="button"
+                      onClick={handleAddZipCode}
+                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700"
+                    >
+                      Add
+                    </button>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">Delivery Radius (km)</label>
-                    <input
-                      type="number"
-                      name="deliveryRadius"
-                      required
-                      min="1"
-                      value={formData.deliveryRadius}
-                      onChange={handleChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
-                    />
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {formData.zipCodes.map((zipCode, index) => (
+                      <span
+                        key={index}
+                        className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                      >
+                        {zipCode}
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveZipCode(zipCode)}
+                          className="ml-1.5 inline-flex items-center justify-center w-4 h-4 rounded-full text-blue-400 hover:bg-blue-200"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
                   </div>
+                  <p className="mt-1 text-sm text-gray-500">Add all ZIP codes where your restaurant delivers</p>
                 </div>
+
               </div>
             )}
           </>

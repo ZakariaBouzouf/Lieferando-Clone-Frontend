@@ -5,12 +5,11 @@ import RestaurantHeader from '../../components/restaurant/RestaurantHeader';
 import { useRestaurant } from '../../context/RestaurantContext';
 
 export default function RestaurantPage() {
-  // const { id } = useParams();
   const params = useParams();
   const id = Number(params.id);
   const [menu, setMenu] = useState(null);
   const { restaurants, menus, retrieveMenus, menu: fetchedMenu } = useRestaurant()
-  const restaurant = restaurants[id - 1]
+  const restaurant = restaurants.filter(i => i.id == id)[0]
 
   useEffect(() => {
     if (menus.length !== 0) {
@@ -36,9 +35,7 @@ export default function RestaurantPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 pt-20 pb-12">
       <RestaurantHeader restaurant={restaurant} />
-      {/* {menu?.items?.length == 0 ? <p>This restaurant propose no menu in moment </p> : */}
       <MenuList menu={menu} restaurantId={id} />
-      {/* } */}
     </div>
   );
 }
