@@ -41,7 +41,7 @@ export function AuthProvider({ children }) {
             email: response.data.email,
             name: response.data.name,
             role: response.data.role,
-            address: response.data.address,
+            street: response.data.street,
             // restaurantId: response.data.restaurantId,
             balance: response?.data?.balance.toFixed(2),
             zipCode: response.data.zipCode
@@ -80,7 +80,7 @@ export function AuthProvider({ children }) {
             role: response.data.role,
             restaurantId: response.data.restaurantId,
             balance: response.data.balance,
-            address: response.data.address,
+            street: response.data.street,
             zipCode: response.data.zipCode
           })
           console.log("Log in", user)
@@ -88,7 +88,7 @@ export function AuthProvider({ children }) {
         }
       }
     } catch (err) {
-      setError(err.response.data.message)
+      throw new Error(err)
     }
   };
 
@@ -108,7 +108,7 @@ export function AuthProvider({ children }) {
     try {
       const response = await updateUserApi(id, data)
       if (response.status == 200) {
-        setUser({ ...user, name: response.data.name, address: response.data.address, zipCode: response.data.zipCode })
+        setUser({ ...user, name: response.data.name, street: response.data.street, zipCode: response.data.zipCode })
       }
     } catch (error) {
       throw new Error(error)

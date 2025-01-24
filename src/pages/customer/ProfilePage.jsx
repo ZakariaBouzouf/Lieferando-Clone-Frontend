@@ -13,7 +13,7 @@ export default function ProfilePage() {
   const [formData, setFormData] = useState({
     name: user?.name || '',
     email: user?.email || '',
-    address: user?.address || '',
+    street: user?.street || '',
     zipCode: user?.zipCode || ''
   });
 
@@ -21,7 +21,7 @@ export default function ProfilePage() {
     if (user != undefined) {
       fetchOrdersCustomer(user?.userId)
     }
-  }, [user, navigate])
+  }, [user])
 
   // Filters state
   const [filters, setFilters] = useState({
@@ -87,94 +87,95 @@ export default function ProfilePage() {
     }
   };
 
-  if (!user) {
-    navigate('/login');
-    return null;
-  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Profile Information */}
-        <div className="lg:col-span-1">
-          <div className="bg-white rounded-lg shadow-md p-6">
-            {!isEditing ? (
-              <div>
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-semibold">Profile Information</h2>
-                  <button
-                    onClick={() => setIsEditing(true)}
-                    className="text-orange-600 hover:text-orange-700"
-                  >
-                    Edit
-                  </button>
-                </div>
-                <div className="space-y-4">
-                  <div className="flex items-center">
-                    <User className="h-5 w-5 text-gray-400 mr-2" />
-                    <span>{user.name}</span>
+        {!user ?
+          (<div>
+            Loading
+          </div>) : (
+            <div className="lg:col-span-1">
+              <div className="bg-white rounded-lg shadow-md p-6">
+                {!isEditing ? (
+                  <div>
+                    <div className="flex items-center justify-between mb-6">
+                      <h2 className="text-xl font-semibold">Profile Information</h2>
+                      <button
+                        onClick={() => setIsEditing(true)}
+                        className="text-orange-600 hover:text-orange-700"
+                      >
+                        Edit
+                      </button>
+                    </div>
+                    <div className="space-y-4">
+                      <div className="flex items-center">
+                        <User className="h-5 w-5 text-gray-400 mr-2" />
+                        <span>{user.name}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <MapPin className="h-5 w-5 text-gray-400 mr-2" />
+                        <span>{user.street || 'No address provided'}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <Phone className="h-5 w-5 text-gray-400 mr-2" />
+                        <span>{user.zipCode || 'Zip code  provided'}</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-center">
-                    <MapPin className="h-5 w-5 text-gray-400 mr-2" />
-                    <span>{user.address || 'No address provided'}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Phone className="h-5 w-5 text-gray-400 mr-2" />
-                    <span>{user.zipCode || 'Zip code  provided'}</span>
-                  </div>
-                </div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <h2 className="text-xl font-semibold mb-4">Edit Profile</h2>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Name</label>
+                      <input
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Street</label>
+                      <textarea
+                        name="address"
+                        value={formData.street}
+                        onChange={handleChange}
+                        rows={3}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Zip Code</label>
+                      <input
+                        name="zipCode"
+                        value={formData.zipCode}
+                        onChange={handleChange}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500"
+                      />
+                    </div>
+                    <div className="flex justify-end space-x-3">
+                      <button
+                        type="button"
+                        onClick={() => setIsEditing(false)}
+                        className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-600 hover:bg-orange-700"
+                      >
+                        Save Changes
+                      </button>
+                    </div>
+                  </form>
+                )}
               </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <h2 className="text-xl font-semibold mb-4">Edit Profile</h2>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Name</label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Address</label>
-                  <textarea
-                    name="address"
-                    value={formData.address}
-                    onChange={handleChange}
-                    rows={3}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Zip Code</label>
-                  <input
-                    name="zipCode"
-                    value={formData.zipCode}
-                    onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500"
-                  />
-                </div>
-                <div className="flex justify-end space-x-3">
-                  <button
-                    type="button"
-                    onClick={() => setIsEditing(false)}
-                    className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-600 hover:bg-orange-700"
-                  >
-                    Save Changes
-                  </button>
-                </div>
-              </form>
-            )}
-          </div>
-        </div>
+            </div>
+          )}
 
         {/* Order History */}
         <div className="lg:col-span-2">

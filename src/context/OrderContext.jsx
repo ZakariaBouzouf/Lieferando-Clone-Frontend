@@ -56,7 +56,7 @@ export function OrderProvider({ children }) {
         setOrders(response.data)
       }
     } catch (err) {
-      setError(err.response)
+      throw new Error(err)
     }
   }
 

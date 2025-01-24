@@ -166,7 +166,7 @@ export default function OrdersList({ orders, onUpdateStatus }) {
                     <div className="mt-2 flex items-center text-sm text-gray-500">
                       <MapPin className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
                       <p>
-                        {order.address}
+                        {order.street}
                         {order.zipCode && <span className="ml-1">({order.zipCode})</span>}
                       </p>
                     </div>

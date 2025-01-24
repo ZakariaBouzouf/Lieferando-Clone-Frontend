@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { USER_ROLES } from '../../utils/constants';
-import { Clock } from 'lucide-react';
 
 export default function AuthForm({ type, onSubmit, error }) {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     name: '',
-    address: '',
+    street: '',
     zipCode: '',
     role: USER_ROLES.CUSTOMER,
     // Restaurant specific fields
@@ -29,7 +28,12 @@ export default function AuthForm({ type, onSubmit, error }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const submitData = { ...formData };
+    const submitData = {
+      ...formData, address: {
+        street: formData.street,
+        zipCode: formData.zipCode,
+      }
+    };
 
     if (formData.role === USER_ROLES.RESTAURANT) {
       submitData.restaurant = {
@@ -41,8 +45,10 @@ export default function AuthForm({ type, onSubmit, error }) {
         isOpen: formData.isOpen,
         openingTime: formData.openingTime,
         closingTime: formData.closingTime,
-        address: formData.address,
-        zipCode: formData.zipCode,
+        // address: {
+        //   street: formData.street,
+        //   zipCode: formData.zipCode,
+        // },
         zipCodes: formData.zipCodes
       };
     }
@@ -150,6 +156,35 @@ export default function AuthForm({ type, onSubmit, error }) {
             onChange={handleChange}
           />
         </div>
+
+
+        {type === 'register' && (
+          <>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Address</label>
+              <textarea
+                name="street"
+                required
+                value={formData.street}
+                onChange={handleChange}
+                rows={2}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">ZIP Code</label>
+              <input
+                type="text"
+                name="zipCode"
+                required
+                value={formData.zipCode}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
+              />
+            </div>
+          </>
+        )}
 
         {type === 'register' && (
           <>
@@ -299,30 +334,6 @@ export default function AuthForm({ type, onSubmit, error }) {
                     className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
                   />
                   <label className="ml-2 block text-sm text-gray-700">Restaurant is currently open</label>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Address</label>
-                  <textarea
-                    name="address"
-                    required
-                    value={formData.address}
-                    onChange={handleChange}
-                    rows={2}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">ZIP Code</label>
-                  <input
-                    type="text"
-                    name="zipCode"
-                    required
-                    value={formData.zipCode}
-                    onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
-                  />
                 </div>
 
                 <div>
