@@ -18,6 +18,8 @@ export default function OrdersList({ orders, onUpdateStatus }) {
 
   const getStatusColor = (status) => {
     switch (status) {
+      case 'accepted' : return 'bg-green-100 text-black-800';
+      case 'declined' : return 'bg-red-100 text-black-800';
       case 'pending': return 'bg-yellow-100 text-yellow-800';
       case 'preparing': return 'bg-blue-100 text-blue-800';
       case 'ready': return 'bg-green-100 text-green-800';
@@ -26,7 +28,7 @@ export default function OrdersList({ orders, onUpdateStatus }) {
     }
   };
 
-  const statuses = ['pending', 'preparing', 'ready', 'delivered'];
+  const statuses = ['pending', 'accepted','declined','preparing', 'ready', 'delivered'];
 
   const handleStatusChange = (orderId, newStatus) => {
     setConfirmationState({
@@ -178,7 +180,9 @@ export default function OrdersList({ orders, onUpdateStatus }) {
                     )}
                   </div>
                 </div>
-                <div className="mt-2 flex items-center text-sm sm:mt-0">
+
+                {order.status !=="declined" && 
+                  (<div className="mt-2 flex items-center text-sm sm:mt-0">
                   <select
                     value={order.status}
                     onChange={(e) => handleStatusChange(order.id, e.target.value)}
@@ -190,7 +194,7 @@ export default function OrdersList({ orders, onUpdateStatus }) {
                       </option>
                     ))}
                   </select>
-                </div>
+                </div> )}
               </div>
 
               <div className="mt-4">

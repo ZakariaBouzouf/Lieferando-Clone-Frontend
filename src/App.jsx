@@ -13,33 +13,38 @@ import RestaurantDashboard from './pages/restaurant/RestaurantDashboard';
 import ProfilePage from './pages/customer/ProfilePage';
 import { OrderProvider } from './context/OrderContext';
 import { Toaster } from 'sonner';
+import RestaurantNotifications from './pages/restaurant/RestaurantNotifications';
+import { SocketProvider } from './context/SocketContext';
 
 function App() {
 
   return (
     <Router>
-      <AuthProvider>
-        <RestaurantProvider>
-          <CartProvider>
-            <OrderProvider>
-              <div className="min-h-screen bg-gray-50">
-                <Toaster position="top-center" richColors/>
-                <Navbar />
-                <Routes>
-                  <Route path="/" element={<HomePage />} />
-                  <Route path="/login" element={<LoginPage />} />
-                  <Route path="/register" element={<RegisterPage />} />
-                  <Route path="/restaurant/:id" element={<RestaurantPage />} />
-                  <Route path="/cart" element={<CartPage />} />
-                  <Route path="/checkout" element={<CheckoutPage />} />
-                  <Route path="/dashboard" element={<RestaurantDashboard />} />
-                  <Route path="/profile" element={<ProfilePage />} />
-                </Routes>
-              </div>
-            </OrderProvider>
-          </CartProvider>
-        </RestaurantProvider>
-      </AuthProvider>
+      <SocketProvider>
+        <AuthProvider>
+          <RestaurantProvider>
+            <CartProvider>
+              <OrderProvider>
+                <div className="min-h-screen bg-gray-50">
+                  <Toaster position="top-center" richColors />
+                  <Navbar />
+                  <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/listning" element={<RestaurantNotifications />} />
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/register" element={<RegisterPage />} />
+                    <Route path="/restaurant/:id" element={<RestaurantPage />} />
+                    <Route path="/cart" element={<CartPage />} />
+                    <Route path="/checkout" element={<CheckoutPage />} />
+                    <Route path="/dashboard" element={<RestaurantDashboard />} />
+                    <Route path="/profile" element={<ProfilePage />} />
+                  </Routes>
+                </div>
+              </OrderProvider>
+            </CartProvider>
+          </RestaurantProvider>
+        </AuthProvider>
+      </SocketProvider>
     </Router>
   );
 }

@@ -15,3 +15,11 @@ export function retrieveRestaurantOrder(restaurant_id){
 export function updateAnOrderApi(id,status){
   return apiClient.put(`/orders/${id}`,{id,status})
 }
+
+export function acceptOrder(id,data){
+  return apiClient.post(`/orders/${id}/accept`,data)
+}
+
+export function declineOrder(id,data){
+  return apiClient.post(`/orders/${id}/decline`,data)
+}
